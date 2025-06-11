@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -59,3 +60,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+=======
+# news-site
+This is a News Website developed using Laravel and MySQL. It allows users to view news articles, and registered users can create, edit, and delete their own news posts. The site features user authentication, category management, and a responsive front-end built with Bootstrap. It’s designed for easy content management with a clean and modern UI.
+>>>>>>> e3ee04be940076d2b5f92c5085a56586e34a0a23
