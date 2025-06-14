@@ -46,11 +46,13 @@
                     @endif
                    
                 </div>
-                @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
+                <div class="primary">
+                    @if(session('success'))
+                        <div style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; margin-bottom: 15px;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                </div>
               </div>
           </div>
       </div>

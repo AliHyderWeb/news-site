@@ -8,7 +8,7 @@
                 <h1 class="admin-heading">All Posts</h1>
             </div>
             <div class="col-md-2">
-                <a class="add-new" href="{{ route('add.post') }}">add post</a>
+                <a class="add-new" href="{{ route('posts.create') }}">add post</a>
             </div>
             <div class="col-md-12">
                 <table class="content-table">
@@ -24,42 +24,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Dummy Data Rows --}}
+                        @foreach($posts as $post)
                         <tr>
-                            <td class='id'>1</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2019</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href="#"><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href="#"><i class='fa fa-trash-o'></i></a></td>
+                            <td class='id'>{{ $post->id }}</td>
+                            <td>{{ $post->title }}</td>
+                            <td>{{ $post->category }}</td>
+                            <td>{{ date('d M, Y', strtotime($post->created_at)) }}</td>
+                            <td> {{ $post->author }} </td>
+                            <td class='edit'><a href="{{ route('posts.edit', $post->id) }}"><i class='fa fa-edit'></i></a></td>
+                            <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <td class='delete'><button type="submit"><i class='fa fa-trash-o'></i></button></td>
+                            </form>
                         </tr>
+                        @endforeach
+                        @if($posts->isEmpty())
                         <tr>
-                            <td class='id'>2</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2019</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href="#"><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href="#"><i class='fa fa-trash-o'></i></a></td>
+                            <td colspan="7" class="text-center">No posts available</td>
                         </tr>
-                        <tr>
-                            <td class='id'>3</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2019</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href="#"><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href="#"><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        {{-- aur jitni rows chahiye, vaise daal sakte ho --}}
+                        @endif
                     </tbody>
-                </table>
-                <ul class='pagination admin-pagination'>
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                </ul>
+                </table> 
+                 <div class="primary">
+                    @if($posts )
+                    <div class="btn primary-btn">{{ $posts->links() }}</div> 
+                     <div class="text-black"> Total records are {{ $posts->total() }} <br> Current Page is  {{ $posts->currentPage() }}</div>   
+                    @endif
+                   
+                </div>
+                <div class="primary">
+                    @if(session('success'))
+                        <div style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; margin-bottom: 15px;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

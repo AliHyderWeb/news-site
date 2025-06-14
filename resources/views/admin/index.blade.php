@@ -24,11 +24,18 @@
                             @csrf
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="text" name="email" class="form-control" placeholder="" required>
+                                <input type="text" name="email" class="form-control  @error('email') is-invalid @enderror"  value="{{ old('email') }}" >
+                                {{-- Display validation error for email --}}
+                               @error('email')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="" required>
+                                <input type="password" name="password" class="form-control @error('email') is-invalid @enderror"  value="{{ old('email') }}">
+                                 @error('email')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <input type="submit" name="login" class="btn btn-primary" value="login" />
                         </form>

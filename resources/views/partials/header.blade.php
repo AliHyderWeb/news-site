@@ -5,7 +5,7 @@
         <div class="row">
             <!-- LOGO -->
             <div class="col-md-2">
-                <a href="{{ url('admin/posts') }}">
+                <a href="{{ route('posts.index') }}">
                     <img class="logo" src="{{ asset('assets/images/news.jpg') }}" alt="Logo">
                 </a>
             </div>
@@ -15,7 +15,10 @@
             <div class="col-md-offset-9 col-md-1">
                 <form action="{{ route('users.logout') }}" method="POST">
                     @csrf
-                    <button type="submit" >  Logout</button> {{ Auth::user()->first_name ?? 'N/' }}
+                     <a href="{{ route('users.logout') }}" class="dropdown-item d-flex align-items-center" onclick="event.preventDefault();
+                                this.closest('form').submit();">
+                        <span>Sign out {{ Auth::user()->first_name }} </span>
+                     </a>          
                 </form>
             </div>
             <!-- /LOGOUT -->
@@ -29,9 +32,11 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="admin-menu">
-                    <li><a href="{{ route('posts') }}">Post</a></li>
+                    <li><a href="{{ route('posts.index') }}">Post</a></li>
+                    @if(Auth::user()->role == 'admin')
                     <li><a href="{{ route('category.index') }}">Category</a></li>  
                     <li><a href="{{ route('users.index') }}">Users</a></li>
+                    @endif
                 </ul>
             </div>
         </div>
