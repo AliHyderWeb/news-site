@@ -8,26 +8,19 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $users = User::paginate(5);
        return view('admin.users', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         return view('admin.add-user');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
      $users = $request->validate([
@@ -42,26 +35,17 @@ class UserController extends Controller
      return redirect()->route('users.index')->with('success', 'User created successfully!');    
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $user = User::findOrFail($id); 
         return view('admin.add-user', compact('user')); 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $users = $request->validate([
@@ -76,9 +60,6 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
@@ -94,7 +75,7 @@ class UserController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            return redirect()->route('users.index');
+            return redirect()->route('posts.index');
         }
 
         return back()->withErrors([
@@ -105,6 +86,6 @@ class UserController extends Controller
     public function logout(){
         Auth::logout();
 
-        return redirect()->route('home');
+        return redirect()->route('login');
     }
 }

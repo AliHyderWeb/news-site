@@ -48,7 +48,10 @@ img.logo{
     background-color: #1E90FF;
     padding: 15px 0;
 }
-
+.active {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.596);
+}
 #header-admin .admin-logout{
     margin: 10px 0;
     color: #fff;

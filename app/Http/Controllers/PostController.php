@@ -14,61 +14,66 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(5);
-       return view('admin.post', compact('posts'));
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            $posts = Post::with(['user','category'])->latest()->paginate(5);
+        } else {
+            $posts = Post::with(['user','category'])
+                        ->where('user_id', $user->id)
+                        ->latest()
+                        ->paginate(5);
+        }
+
+        return view('admin.post', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $categorys = Category::all();
         return view('admin.add-post', compact('categorys') );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $image = $request->file('post_image');
 
         $validate = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'post_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         
-         $path = $request->file('post_image')->store('image', 'public');
-         
-         $validate['post_image'] = $path; 
-         $validate['author'] = Auth::user()->first_name;
+        $path = $image->store('image', 'public');
+        
+        $validate['post_image'] = $path; 
+        $validate['user_id'] = Auth::id();
 
-         category::where('id', $validate['category'] )->increment('posts');
+        Category::where('id', $validate['category_id'])->increment('posts');
 
-         Post::create($validate);
-         return redirect()->route('posts.index')->with('success', 'Post created successfully!');
+        Post::create($validate);
+
+        return redirect()->route('posts.index')->with('success', 'Post created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(string $id)
     {
-       $posts = Post::findOrFail($id);
-       $categorys = Category::all();
+        $posts = Post::findOrFail($id);
+        $user = Auth::user();
 
-       return view('admin.add-post', compact('posts','categorys'));
+        if ($user->role !== 'admin' && $posts->user_id !== $user->id) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $categorys = Category::all();
+        return view('admin.add-post', compact('posts', 'categorys'));
     }
 
     /**
@@ -79,13 +84,13 @@ class PostController extends Controller
         $validate = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'post_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
         ]);
 
         $post = Post::findOrFail($id);
-        $oldCategory = $post->category;
-        $newCategory = $validate['category'];
+        $oldCategory = $post->category_id;
+        $newCategory = $validate['category_id'];
 
         if($oldCategory != $newCategory){
             category::where('id', $oldCategory)->decrement('posts');
@@ -103,8 +108,7 @@ class PostController extends Controller
         } else {
             $validate['post_image'] = $post->post_image; 
         }
-
-        $validate['author'] = Auth::user()->first_name;
+   
         $post->update($validate);
 
         return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
@@ -116,14 +120,17 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         $post = Post::findOrFail($id);
+        
         $post->delete();
 
-       $imagePath = public_path('storage/'.$post->post_image);
-         
-        if(file_exists($imagePath)){
+        $imagePath = public_path('storage/' . $post->post_image);
+
+        if (file_exists($imagePath)) {
             @unlink($imagePath);
         }
-        category::where('id', $post['category'] )->decrement('posts');
+
+        Category::where('id', $post->category_id)->decrement('posts');
+
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
     }
 }

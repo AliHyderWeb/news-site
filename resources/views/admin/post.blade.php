@@ -28,9 +28,9 @@
                         <tr>
                             <td class='id'>{{ $post->id }}</td>
                             <td>{{ $post->title }}</td>
-                            <td>{{ $post->category }}</td>
+                            <td>{{ $post->category->category_name }}</td>
                             <td>{{ date('d M, Y', strtotime($post->created_at)) }}</td>
-                            <td> {{ $post->author }} </td>
+                            <td>{{ $post->user->first_name ?? 'Unknown' }}</td>
                             <td class='edit'><a href="{{ route('posts.edit', $post->id) }}"><i class='fa fa-edit'></i></a></td>
                             <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="delete-form">
                                 @csrf

@@ -32,11 +32,19 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="admin-menu">
-                    <li><a href="{{ route('posts.index') }}">Post</a></li>
-                    @if(Auth::user()->role == 'admin')
-                    <li><a href="{{ route('category.index') }}">Category</a></li>  
-                    <li><a href="{{ route('users.index') }}">Users</a></li>
-                    @endif
+                   <li>
+  <a href="{{ route('posts.index') }}" class="{{ request()->routeIs('posts.index') ? 'active' : '' }}">Posts</a>
+</li>
+
+@if(Auth::user()->role == 'admin')
+<li>
+  <a href="{{ route('category.index') }}" class="{{ request()->routeIs('category.index') ? 'active' : '' }}">Category</a>
+</li>
+<li>
+  <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.index') ? 'active' : '' }}">Users</a>
+</li>
+@endif
+
                 </ul>
             </div>
         </div>
