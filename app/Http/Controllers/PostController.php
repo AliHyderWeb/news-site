@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
+use App\actions\StorePost;
+use App\actions\UpdatePost;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -34,25 +37,12 @@ class PostController extends Controller
         return view('admin.add-post', compact('categorys') );
     }
 
-   public function store(Request $request)
+   public function store(PostRequest $request, StorePost  $storePost)
     {
-        $image = $request->file('post_image');
+        $data = $request->validated();
+        $data['post_image'] = $request->file('post_image');
 
-        $validate = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'post_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        
-        $path = $image->store('image', 'public');
-        
-        $validate['post_image'] = $path; 
-        $validate['user_id'] = Auth::id();
-
-        Category::where('id', $validate['category_id'])->increment('posts');
-
-        Post::create($validate);
+        $storePost->handle($data);  
 
         return redirect()->route('posts.index')->with('success', 'Post created successfully!');
     }
@@ -79,38 +69,16 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostRequest $request, string $id, UpdatePost $updatePost)
     {
-        $validate = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'post_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
-        ]);
-
         $post = Post::findOrFail($id);
-        $oldCategory = $post->category_id;
-        $newCategory = $validate['category_id'];
-
-        if($oldCategory != $newCategory){
-            category::where('id', $oldCategory)->decrement('posts');
-            category::where('id', $newCategory)->increment('posts');
-        }
-        
+        $data = $request->validated();
+       
         if ($request->hasFile('post_image')) {
+            $data['post_image'] = $request->file('post_image');
+        }  
 
-            $imagePath = public_path('storage/'.$post->post_image);
-            @unlink($imagePath);
-            
-            $path = $request->file('post_image')->store('image', 'public');
-            $validate['post_image'] = $path; 
-        
-        } else {
-            $validate['post_image'] = $post->post_image; 
-        }
-   
-        $post->update($validate);
-
+        $updatePost->handle($post, $data);
         return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
     }
 
