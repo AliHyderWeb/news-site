@@ -32,19 +32,30 @@
                               <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="delete-form">
                               @csrf
                               @method('DELETE')
-                              <td class='delete'><button type="submit"><i class='fa fa-trash-o'></i></button></td>
+                              <td class='delete'><button type="submit" onclick="return confirm('Are you sure?')"><i class='fa fa-trash-o'></i></button></td>
                               </form>
                           </tr>   
                         @endforeach
+                         @if($users->isEmpty())
+                        <tr>
+                            <td colspan="7" class="text-center">No Users available</td>
+                        </tr>
+                        @endif
                         @endif
                       </tbody>
                   </table> 
-                  <div class="primary">
-                    @if($users )
-                    <div class="btn primary-btn">{{ $users->links() }}</div> 
-                     <div class="text-black"> Total records are {{ $users->total() }} <br> Current Page is  {{ $users->currentPage() }}</div>   
-                    @endif
-                   
+                 <div class="primary">
+                   <div class="d-flex justify-content-between align-items-center flex-wrap mt-4">
+                        <div>
+                            @if($users->hasPages())
+                                {{ $users->links('pagination::bootstrap-4') }}
+                            @endif
+                        </div>
+                        <div class="text-black">
+                            Total records: {{ $users->total() }} <br>
+                            Current Page: {{ $users->currentPage() }}
+                        </div>
+                    </div>
                 </div>
                 <div class="primary">
                     @if(session('success'))
