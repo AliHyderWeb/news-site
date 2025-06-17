@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PostRequest;
-use App\actions\StorePost;
-use App\actions\UpdatePost;
 use App\Models\Post;
 use App\Models\Category;
+use App\Actions\GetPosts;
+use App\actions\StorePost;
+use App\actions\UpdatePost;
 use Illuminate\Http\Request;
+use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -15,19 +16,11 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   public function index(Request $request, GetPosts $getPosts)
     {
-        $user = Auth::user();
-
-        if ($user->role === 'admin') {
-            $posts = Post::with(['user','category'])->latest()->paginate(5);
-        } else {
-            $posts = Post::with(['user','category'])
-                        ->where('user_id', $user->id)
-                        ->latest()
-                        ->paginate(5);
-        }
-
+        $search = $request->input('search');
+        $posts = $getPosts->handle($search);
+       
         return view('admin.post', compact('posts'));
     }
 

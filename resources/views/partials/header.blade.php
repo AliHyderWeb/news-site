@@ -12,15 +12,19 @@
             <!-- /LOGO -->
 
             <!-- LOGOUT -->
-            <div class="col-md-offset-9 col-md-1">
-                <form action="{{ route('users.logout') }}" method="POST">
-                    @csrf
-                     <a href="{{ route('users.logout') }}" class="dropdown-item d-flex align-items-center" onclick="event.preventDefault();
-                                this.closest('form').submit();">
-                        <span>Sign out {{ Auth::user()->first_name }} </span>
-                     </a>          
-                </form>
-            </div>
+  <div class="col-md-offset-10 col-md-4">
+    <form action="{{ route('users.logout') }}" method="POST" style="background: transparent; margin-bottom: 10px; ; padding: 0; border: none;">
+        @csrf
+        <a href="{{ route('users.logout') }}" 
+           class="dropdown-item d-flex align-items-center " 
+           onclick="event.preventDefault(); this.closest('form').submit();" 
+           style="color: #fff; font-weight: bold; font-size:20px; background:#0000007c; padding:10px;">
+            <span>Sign out | {{ Auth::user()->first_name }}</span>
+        </a>          
+    </form>
+</div>
+
+
             <!-- /LOGOUT -->
         </div>
     </div>

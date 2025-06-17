@@ -29,13 +29,25 @@
                             <form action="{{ route('category.destroy', $category->id) }}" method="POST" class="delete-form">
                             @csrf
                             @method('DELETE')
-                            <td class='delete'><button type="submit"><i class='fa fa-trash-o'></i></button></td>
+                            <td class='delete'><button type="submit" onclick="return confirm('Are you sure?')"><i class='fa fa-trash-o'></i></button></td>
                             </form>
                         </tr>
                     @endforeach
                     </tbody>
                 </table> 
-                <div> {{ $categories->links() }} Total {{ $categories->total() }} </div>
+                 <div class="primary">
+                   <div class="d-flex justify-content-between align-items-center flex-wrap mt-4">
+                        <div>
+                            @if($categories->hasPages())
+                                {{ $categories->links('pagination::bootstrap-4') }}
+                            @endif
+                        </div>
+                        <div class="text-black">
+                            Total records: {{ $categories->total() }} <br>
+                            Current Page: {{ $categories->currentPage() }}
+                        </div>
+                    </div>
+                </div>
                 @if(session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}

@@ -35,7 +35,7 @@
                             <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="delete-form">
                                 @csrf
                                 @method('DELETE')
-                                <td class='delete'><button type="submit"><i class='fa fa-trash-o'></i></button></td>
+                                <td class='delete'><button type="submit" onclick="return confirm('Are you sure?')"><i class='fa fa-trash-o'></i></button></td>
                             </form>
                         </tr>
                         @endforeach
@@ -46,12 +46,20 @@
                         @endif
                     </tbody>
                 </table> 
-                 <div class="primary">
-                    @if($posts )
-                    <div class="btn primary-btn">{{ $posts->links() }}</div> 
-                     <div class="text-black"> Total records are {{ $posts->total() }} <br> Current Page is  {{ $posts->currentPage() }}</div>   
-                    @endif
-                   
+                <div class="primary">
+                    
+                        <div class="d-flex justify-content-between align-items-center flex-wrap mt-4">
+                            <div>
+                                @if($posts->hasPages())
+                                    {{ $posts->links('pagination::bootstrap-4') }}
+                                @endif
+                            </div>
+                            <div class="text-black">
+                                Total records: {{ $posts->total() }} <br>
+                                Current Page: {{  $posts->currentPage() }}
+                            </div>
+                        </div>
+                  
                 </div>
                 <div class="primary">
                     @if(session('success'))
@@ -60,6 +68,16 @@
                         </div>
                     @endif
                 </div>
+                {{-- Search Bar --}}
+                <form method="GET" action="{{ route('posts.index') }}" 
+                    style="background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; margin-left: auto; justify-content: flex-end;">
+                    
+                    <input type="text" name="search" placeholder="Search posts..."  
+                        value="{{ request('search') }}" 
+                        style="width: 250px; height: 38px; border: none; border-bottom: 1px solid #ccc; background-color: #ffffff; padding: 0 10px;" />
+                    
+                    <button type="submit" class="btn btn-primary" style="height: 38px;">Search</button>
+                </form>
             </div>
         </div>
     </div>
