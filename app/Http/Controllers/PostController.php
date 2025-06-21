@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use App\Models\Category;
 use App\Actions\GetPosts;
 use App\actions\StorePost;
@@ -93,5 +94,35 @@ class PostController extends Controller
         Category::where('id', $post->category_id)->decrement('posts');
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
+    }
+
+    public function showPosts(){
+        $posts= Post::paginate(5);
+        return view('public.index', compact('posts'));
+    }
+
+    public function showSinglePost($id)
+    {
+        $post = Post::findOrFail($id);
+        if(!$post){
+            abort(404, 'Post not found');
+        }
+        return view('public.single', compact('post'));
+    }
+
+    public function categroyPosts($id)
+    {
+        $category = Category::findOrFail($id);
+        $posts = $category->posts()->paginate(5);
+        
+        return view('public.category', compact('posts', 'category'));
+    }
+
+    public function authorsPosts($id){
+
+        $user = User::findOrFail($id);
+        $posts = $user->posts()->get();
+
+        return view('public.author', compact('posts', 'user'));
     }
 }
