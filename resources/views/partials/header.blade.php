@@ -12,7 +12,7 @@
             <!-- /LOGO -->
 
             <!-- LOGOUT -->
-  <div class="col-md-offset-10 col-md-4">
+  <div class="col-md-offset-9 col-md-3">
     <form action="{{ route('users.logout') }}" method="POST" style="background: transparent; margin-bottom: 10px; ; padding: 0; border: none;">
         @csrf
         <a href="{{ route('users.logout') }}" 
@@ -37,18 +37,17 @@
             <div class="col-md-12">
                 <ul class="admin-menu">
                    <li>
-  <a href="{{ route('posts.index') }}" class="{{ request()->routeIs('posts.index') ? 'active' : '' }}">Posts</a>
-</li>
+                        <a href="{{ route('posts.index') }}" class="{{ request()->routeIs('posts.index') ? 'active' : '' }}">Posts</a>
+                    </li>
 
-@if(Auth::user()->role == 'admin')
-<li>
-  <a href="{{ route('category.index') }}" class="{{ request()->routeIs('category.index') ? 'active' : '' }}">Category</a>
-</li>
-<li>
-  <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.index') ? 'active' : '' }}">Users</a>
-</li>
-@endif
-
+                    @if(Auth::user()->role == 'admin')
+                    <li>
+                        <a href="{{ route('category.index') }}" class="{{ request()->routeIs('category.index') ? 'active' : '' }}">Category</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.index') ? 'active' : '' }}">Users</a>
+                    </li>
+                    @endif
                 </ul>
             </div>
         </div>

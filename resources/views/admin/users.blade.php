@@ -17,6 +17,7 @@
                           <th>Full Name</th>
                           <th>User Email</th>
                           <th>Role</th>
+                          <th>Download</th>
                           <th>Edit</th>
                           <th>Delete</th>
                       </thead>
@@ -28,6 +29,7 @@
                               <td> {{ ucfirst($user->first_name )}}  {{ $user->last_name }}</td>
                               <td> {{ $user->email }}</td>
                               <td> {{ ucfirst($user->role) }}</td>
+                              <td> <a href="{{ route('users.pdf', $user->id) }}"><i class='fa fa-download'></i></a> </td>
                               <td class='edit'><a href='{{ route('users.edit', $user->id) }}'><i class='fa fa-edit'></i></a></td>
                               <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="delete-form">
                               @csrf

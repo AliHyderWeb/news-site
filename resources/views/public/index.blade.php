@@ -40,7 +40,6 @@
                             </div>
                         </div>
                     </div>
-                   
                     @endforeach
                     <div class="d-flex justify-content-between align-items-center flex-wrap mt-4">
                             <div>

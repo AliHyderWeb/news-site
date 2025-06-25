@@ -38,6 +38,7 @@
                                 @enderror
                             </div>
                             <input type="submit" name="login" class="btn btn-primary" value="login" />
+                            <a href="{{ route('posts.show') }}"  class="btn btn-danger"> Cancel</a>
                         </form>
                         <!-- /Form  End -->
                     </div>

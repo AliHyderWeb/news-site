@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('post_image')->nullable();
+            $table->enum('status',['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

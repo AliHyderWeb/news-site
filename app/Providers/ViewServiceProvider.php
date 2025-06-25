@@ -36,6 +36,7 @@ class ViewServiceProvider extends ServiceProvider
                             $q->where('category_name', 'like', '%' . $search . '%');
                         });
                 })
+                ->where('status', 'approved')
                 ->latest()
                 ->paginate(5);
 
@@ -46,7 +47,12 @@ class ViewServiceProvider extends ServiceProvider
 
         //sending data to the public header view
         View::Composer('partials.public-header', function($view){
-            $categories = Category::where('posts', '>', 0)->get();
+           $categories = Category::withCount(['posts' => function ($query) {
+                $query->where('status', 'approved');
+            }])
+            ->having('posts_count', '>', 0)
+            ->get();
+            
             $category = Category::all();
             $view->with('categories', $categories , 'category', $category);
         });

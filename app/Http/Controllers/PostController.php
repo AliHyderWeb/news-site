@@ -21,7 +21,11 @@ class PostController extends Controller
     {
         $search = $request->input('search');
         $posts = $getPosts->handle($search);
-       
+
+        if ($request->ajax()) {
+            return view('admin.post-list', compact('posts'))->render();
+        } 
+
         return view('admin.post', compact('posts'));
     }
 
@@ -96,8 +100,17 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
     }
 
+    public function updatePostStatus(Request $request)
+    {
+        $post = Post::findOrFail($request->id);
+        $post->status = $request->status;
+        $post->save();
+
+        return response()->json(['success' => true, 'message' => 'Post status updated successfully']);
+    }
+
     public function showPosts(){
-        $posts= Post::paginate(5);
+        $posts= Post::where('status', 'approved')->paginate(5);
         return view('public.index', compact('posts'));
     }
 
@@ -113,7 +126,7 @@ class PostController extends Controller
     public function categroyPosts($id)
     {
         $category = Category::findOrFail($id);
-        $posts = $category->posts()->paginate(5);
+        $posts = $category->posts()->where('status', 'approved')->paginate(5);
         
         return view('public.category', compact('posts', 'category'));
     }
@@ -121,7 +134,7 @@ class PostController extends Controller
     public function authorsPosts($id){
 
         $user = User::findOrFail($id);
-        $posts = $user->posts()->get();
+        $posts = $user->posts()->where('status', 'approved')->get();
 
         return view('public.author', compact('posts', 'user'));
     }

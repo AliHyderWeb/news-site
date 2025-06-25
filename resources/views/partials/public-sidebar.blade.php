@@ -17,6 +17,7 @@
     <div class="recent-post-container">
         <h4>Recent Posts</h4>
         @foreach ($latestPosts as $latestPost )
+        @if($latestPost->status == 'approved')
         <div class="recent-post">
             <a class="post-img" href=" {{ route('posts.show.single', $latestPost->id) }}">
                 <img  src="{{ asset('storage/' . $latestPost->post_image) }}" alt="Post Image" />
@@ -34,6 +35,7 @@
                 <a class="read-more" href="{{ route('posts.show.single', $latestPost->id) }}">read more</a>
             </div>
         </div>
+        @endif
         @endforeach
     </div>
     <!-- /recent posts box -->

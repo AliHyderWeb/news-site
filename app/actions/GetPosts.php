@@ -19,7 +19,7 @@ class GetPosts
                               $q2->where('category_name', 'like', '%' . $search . '%');
                           });
                     });
-                })->latest()->paginate(5);
+                })->latest()->paginate(8);
         } else {
             return Post::with(['user', 'category'])
                 ->where('user_id', $user->id)
@@ -30,7 +30,7 @@ class GetPosts
                               $q2->where('category_name', 'like', '%' . $search . '%');
                           });
                     });
-                }) ->latest()->paginate(5);
+                }) ->latest()->paginate(8);
         }
     }
 }
