@@ -99,7 +99,10 @@ class PostController extends Controller
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
     }
-
+    /**
+     * Update the status of a post.
+     */
+    // This method is used to update the status of a post by admin.
     public function updatePostStatus(Request $request)
     {
         $post = Post::findOrFail($request->id);
@@ -108,12 +111,17 @@ class PostController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Post status updated successfully']);
     }
-
+     /**
+     * Show all approved posts.s
+     */
     public function showPosts(){
         $posts= Post::where('status', 'approved')->paginate(5);
         return view('public.index', compact('posts'));
     }
 
+    /**
+     * Show a single post.
+     */
     public function showSinglePost($id)
     {
         $post = Post::findOrFail($id);
@@ -122,7 +130,9 @@ class PostController extends Controller
         }
         return view('public.single', compact('post'));
     }
-
+     /**
+     * Category posts based on category_id.
+     */
     public function categroyPosts($id)
     {
         $category = Category::findOrFail($id);
@@ -131,6 +141,9 @@ class PostController extends Controller
         return view('public.category', compact('posts', 'category'));
     }
 
+     /**
+     * Author posts based on user ID.
+     */
     public function authorsPosts($id){
 
         $user = User::findOrFail($id);
@@ -138,4 +151,19 @@ class PostController extends Controller
 
         return view('public.author', compact('posts', 'user'));
     }
+
+     /**
+     * Filter posts based on status.
+     */
+    public function filterPosts(Request $request)
+    {
+        $status = $request->status;
+        $posts = $status ? Post::where('status', $status)->with(['category', 'user'])->get() : Post::with(['category', 'user'])->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $posts
+        ]);
+    }
+
 }

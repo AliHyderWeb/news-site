@@ -19,6 +19,7 @@ Route::post('/users/login', [UserController::class, 'login'])->name('users.login
 
 Route::middleware('auth')->group(function(){
     Route::resource('posts', PostController::class)->except('show');
+    Route::get('/posts/filter', [PostController::class, 'filterPosts'])->name('posts.filter');
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
     
     Route::get('/export-user-pdf/{id}', function ($id) {
